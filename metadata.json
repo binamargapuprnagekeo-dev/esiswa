@@ -1,0 +1,6 @@
+{
+  "name": "Sistem Informasi & Input Data Siswa",
+  "description": "Aplikasi manajemen dan input data siswa lengkap dengan validasi data, manajemen kelas/jurusan, statistik, ekspor-impor Excel/CSV, dan cetak Kartu Pelajar (KTS).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
