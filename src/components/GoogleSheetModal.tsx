@@ -217,7 +217,22 @@ export const GoogleSheetModal: React.FC<GoogleSheetModalProps> = ({
           </form>
 
           {/* Apps Script Guide & Code */}
+          {/* Apps Script Guide & Code */}
           <div className="pt-4 border-t border-slate-100">
+            {/* Warning / Troubleshooting Notice */}
+            <div className="mb-4 p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-900 text-xs leading-relaxed space-y-1.5">
+              <div className="font-bold flex items-center gap-1.5 text-amber-950">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Penting: Cara Memperbarui Skrip di Google Sheet Anda</span>
+              </div>
+              <p>
+                Jika sebelumnya tombol Hapus atau Edit membuat baris kosong di sheet Anda, hal tersebut karena Google Apps Script lama hanya memiliki perintah tambah (<em>appendRow</em>).
+              </p>
+              <p className="font-medium">
+                <strong>Langkah Pembaruan:</strong> Salin script di bawah &rarr; Buka Apps Script spreadsheet Anda &rarr; Tempelkan script &rarr; Klik <strong>Deploy &gt; Manage deployments &gt; Ikon Pensil (Edit) &gt; Pilih "New version" &gt; Deploy</strong>.
+              </p>
+            </div>
+
             <div className="flex items-center justify-between mb-3">
               <button
                 type="button"
@@ -225,30 +240,31 @@ export const GoogleSheetModal: React.FC<GoogleSheetModalProps> = ({
                 className="inline-flex items-center gap-2 font-bold text-slate-800 hover:text-emerald-700 text-xs sm:text-sm"
               >
                 <Code className="w-4 h-4 text-emerald-600" />
-                <span>Lihat Script Google Apps Script & Cara Pasang</span>
+                <span>Lihat Script Google Apps Script (Versi Hapus & Edit Lengkap)</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleCopyScript}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition-colors border border-emerald-200"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-2xs"
               >
-                {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedCode ? 'Tersalin!' : 'Salin Script'}</span>
+                {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedCode ? 'Tersalin!' : 'Salin Script Baru'}</span>
               </button>
             </div>
 
             {showScriptCode && (
               <div className="space-y-3 animate-in fade-in duration-200">
                 <ol className="list-decimal list-inside space-y-1 text-xs text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                  <li>Buka spreadsheet Anda di <a href="https://sheets.new" target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline">sheets.new</a></li>
-                  <li>Buka menu <strong>Ekstensi &gt; Apps Script</strong></li>
-                  <li>Tempelkan kode di bawah ini, lalu klik <strong>Terapkan (Deploy) &gt; Penerapan Baru (New deployment)</strong></li>
-                  <li>Pilih jenis <strong>Aplikasi Web</strong>, setel <em>Siapa yang memiliki akses</em> ke <strong>Siapa saja (Anyone)</strong>, lalu salin URL web app-nya ke aplikasi ini!</li>
+                  <li>Buka spreadsheet Anda di <a href="https://sheets.new" target="_blank" rel="noreferrer" className="text-indigo-600 font-bold underline">sheets.new</a> atau buka sheet yang terhubung.</li>
+                  <li>Buka menu <strong>Ekstensi &gt; Apps Script</strong>.</li>
+                  <li>Hapus semua kode lama dan tempelkan kode di bawah ini.</li>
+                  <li>Klik <strong>Deploy &gt; Manage deployments (Kelola penerapan) &gt; Edit (Pensil) &gt; Versi Baru (New version) &gt; Deploy</strong>.</li>
+                  <li>Selesai! Sekarang tombol Hapus dan Edit akan langsung memproses baris yang tepat tanpa pernah membuat baris kosong.</li>
                 </ol>
 
                 <div className="relative">
-                  <pre className="p-4 bg-slate-900 text-emerald-400 font-mono text-[11px] rounded-xl overflow-x-auto max-h-56 leading-relaxed">
+                  <pre className="p-4 bg-slate-900 text-emerald-400 font-mono text-[11px] rounded-xl overflow-x-auto max-h-64 leading-relaxed">
                     {GOOGLE_APPS_SCRIPT_TEMPLATE}
                   </pre>
                 </div>
