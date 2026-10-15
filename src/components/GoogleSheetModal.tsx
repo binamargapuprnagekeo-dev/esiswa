@@ -117,10 +117,10 @@ export const GoogleSheetModal: React.FC<GoogleSheetModalProps> = ({
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
               <p className="font-bold text-emerald-950">
-                Penyimpanan Real-Time Aktif
+                Sinkronisasi Penuh: Simpan, Edit & Hapus Terhubung ke Sheet
               </p>
               <p className="text-emerald-800 text-xs leading-relaxed">
-                Setiap kali Anda menekan tombol <strong>"Daftarkan Siswa"</strong> pada formulir, data siswa akan langsung dikirimkan melalui <strong>POST Webhook</strong> ke Google Spreadsheet secara otomatis tanpa perlu ekspor manual!
+                Saat Anda <strong>mendaftarkan</strong> siswa, <strong>mengedit data</strong>, atau menekan tombol <strong>Hapus / Hapus Terpilih</strong> di web, Webhook akan langsung menghapus baris data yang bersangkutan di Google Sheet secara otomatis!
               </p>
             </div>
           </div>

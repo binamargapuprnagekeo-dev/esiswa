@@ -19,7 +19,11 @@ import {
   resetToDefaultData, 
   exportToCSV 
 } from './utils/storage';
-import { syncStudentToGoogleSheet } from './services/googleSheetService';
+import { 
+  syncStudentToGoogleSheet,
+  deleteStudentFromGoogleSheet,
+  deleteBulkStudentsFromGoogleSheet 
+} from './services/googleSheetService';
 
 export default function App() {
   const [students, setStudents] = useState<Student[]>(() => getStoredStudents());
@@ -117,12 +121,47 @@ export default function App() {
   const handleDeleteStudent = (studentId: string) => {
     const target = students.find((s) => s.id === studentId);
     setStudents((prev) => prev.filter((s) => s.id !== studentId));
-    addToast(`Data siswa ${target ? `"${target.namaLengkap}"` : ''} berhasil dihapus.`, 'info');
+    addToast(
+      `Data siswa ${target ? `"${target.namaLengkap}"` : ''} dihapus dari aplikasi & Google Sheet.`,
+      'info'
+    );
+
+    // Kirim permintaan hapus baris ke Google Sheet Webhook
+    if (target) {
+      deleteStudentFromGoogleSheet({
+        id: target.id,
+        nisn: target.nisn,
+        namaLengkap: target.namaLengkap,
+      })
+        .then((res) => {
+          console.log('Google Sheet delete response:', res.message);
+        })
+        .catch((err) => {
+          console.warn('Google Sheet delete error:', err);
+        });
+    }
   };
 
   const handleBulkDelete = (studentIds: string[]) => {
+    const targetStudents = students.filter((s) => studentIds.includes(s.id));
     setStudents((prev) => prev.filter((s) => !studentIds.includes(s.id)));
-    addToast(`${studentIds.length} data siswa berhasil dihapus.`, 'info');
+    addToast(
+      `${studentIds.length} data siswa dihapus dari aplikasi & Google Sheet.`,
+      'info'
+    );
+
+    // Kirim permintaan hapus baris massal ke Google Sheet Webhook
+    if (targetStudents.length > 0) {
+      deleteBulkStudentsFromGoogleSheet(
+        targetStudents.map((s) => ({ id: s.id, nisn: s.nisn }))
+      )
+        .then((res) => {
+          console.log('Google Sheet bulk delete response:', res.message);
+        })
+        .catch((err) => {
+          console.warn('Google Sheet bulk delete error:', err);
+        });
+    }
   };
 
   const handleOpenCard = (student: Student) => {
