@@ -7,6 +7,7 @@ import { StudentDetailModal } from './components/StudentDetailModal';
 import { StudentCardModal } from './components/StudentCardModal';
 import { SchoolSettingsModal } from './components/SchoolSettingsModal';
 import { ExportImportModal } from './components/ExportImportModal';
+import { GoogleSheetModal } from './components/GoogleSheetModal';
 import { PrintReportView } from './components/PrintReportView';
 import { Toast, ToastMessage } from './components/Toast';
 import { Student, StudentFormData, SchoolInfo } from './types/student';
@@ -18,6 +19,7 @@ import {
   resetToDefaultData, 
   exportToCSV 
 } from './utils/storage';
+import { syncStudentToGoogleSheet } from './services/googleSheetService';
 
 export default function App() {
   const [students, setStudents] = useState<Student[]>(() => getStoredStudents());
@@ -31,6 +33,7 @@ export default function App() {
   const [showCardModal, setShowCardModal] = useState<boolean>(false);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
+  const [showGoogleSheetModal, setShowGoogleSheetModal] = useState<boolean>(false);
   const [showPrintReport, setShowPrintReport] = useState<boolean>(false);
 
   // Toast notification state
@@ -72,32 +75,40 @@ export default function App() {
 
   const handleSaveStudent = (data: StudentFormData, studentId?: string) => {
     const now = new Date().toISOString();
+    let savedStudent: Student;
 
     if (studentId) {
       // Edit existing
+      savedStudent = {
+        ...data,
+        id: studentId,
+        createdAt: students.find((s) => s.id === studentId)?.createdAt || now,
+        updatedAt: now,
+      };
       setStudents((prev) =>
-        prev.map((s) =>
-          s.id === studentId
-            ? {
-                ...s,
-                ...data,
-                updatedAt: now,
-              }
-            : s
-        )
+        prev.map((s) => (s.id === studentId ? savedStudent : s))
       );
-      addToast(`Data siswa "${data.namaLengkap}" berhasil diperbarui!`, 'success');
+      addToast(`Data "${data.namaLengkap}" tersimpan & disinkronkan ke Google Sheet!`, 'success');
     } else {
       // Create new
-      const newStudent: Student = {
+      savedStudent = {
         ...data,
         id: `std-${Date.now().toString(36)}`,
         createdAt: now,
         updatedAt: now,
       };
-      setStudents((prev) => [newStudent, ...prev]);
-      addToast(`Siswa "${data.namaLengkap}" berhasil didaftarkan!`, 'success');
+      setStudents((prev) => [savedStudent, ...prev]);
+      addToast(`Siswa "${data.namaLengkap}" berhasil didaftarkan & dikirim ke Google Sheet!`, 'success');
     }
+
+    // Kirim data secara otomatis ke Webhook Google Sheet
+    syncStudentToGoogleSheet(savedStudent, studentId ? 'update' : 'create')
+      .then((res) => {
+        console.log('Sinkronisasi Google Sheet berhasil:', res.message);
+      })
+      .catch((err) => {
+        console.warn('Google Sheet Webhook info:', err);
+      });
 
     setEditingStudent(null);
     setActiveTab('list');
@@ -169,6 +180,7 @@ export default function App() {
         totalStudents={students.length}
         schoolInfo={schoolInfo}
         onOpenExportModal={() => setShowExportModal(true)}
+        onOpenGoogleSheetModal={() => setShowGoogleSheetModal(true)}
         onAddNewStudent={handleAddNewStudent}
       />
 
@@ -192,6 +204,7 @@ export default function App() {
             }}
             onPrintReport={() => setShowPrintReport(true)}
             onSelectStudent={(student) => setDetailStudent(student)}
+            onOpenGoogleSheetModal={() => setShowGoogleSheetModal(true)}
           />
         )}
 
@@ -222,6 +235,7 @@ export default function App() {
               addToast(`Berhasil mengekspor ${toExport.length} data siswa!`, 'success');
             }}
             onPrintReport={() => setShowPrintReport(true)}
+            onOpenGoogleSheet={() => setShowGoogleSheetModal(true)}
           />
         )}
       </main>
@@ -269,6 +283,15 @@ export default function App() {
           onImportStudents={handleImportStudents}
           onResetData={handleResetData}
           onClose={() => setShowExportModal(false)}
+        />
+      )}
+
+      {/* Modal: Google Sheet Webhook Sync */}
+      {showGoogleSheetModal && (
+        <GoogleSheetModal
+          students={students}
+          onClose={() => setShowGoogleSheetModal(false)}
+          onNotify={(msg, type) => addToast(msg, type)}
         />
       )}
 

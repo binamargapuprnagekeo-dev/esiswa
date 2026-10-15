@@ -17,6 +17,7 @@ interface NavbarProps {
   totalStudents: number;
   schoolInfo: SchoolInfo;
   onOpenExportModal: () => void;
+  onOpenGoogleSheetModal: () => void;
   onAddNewStudent: () => void;
 }
 
@@ -26,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   totalStudents,
   schoolInfo,
   onOpenExportModal,
+  onOpenGoogleSheetModal,
   onAddNewStudent,
 }) => {
   return (
@@ -112,6 +114,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Action buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
+              onClick={onOpenGoogleSheetModal}
+              className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100/70 text-emerald-800 text-xs sm:text-sm font-bold transition-colors shadow-2xs"
+              title="Webhook Google Sheet Otomatis"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+              <span className="hidden sm:inline">Google Sheet</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            </button>
+
+            <button
               onClick={onOpenExportModal}
               className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold transition-colors shadow-2xs"
               title="Ekspor & Cadangan Data"
@@ -167,6 +179,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <School className="w-3.5 h-3.5" />
             Sekolah
+          </button>
+          <button
+            onClick={onOpenGoogleSheetModal}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap bg-emerald-50 text-emerald-800 border border-emerald-200"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+            Google Sheet
           </button>
         </div>
       </div>

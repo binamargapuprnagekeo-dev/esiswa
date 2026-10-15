@@ -12,7 +12,8 @@ import {
   Award,
   CreditCard,
   Eye,
-  CheckCircle2
+  CheckCircle2,
+  FileSpreadsheet
 } from 'lucide-react';
 import { Student, SchoolInfo } from '../types/student';
 
@@ -25,6 +26,7 @@ interface DashboardStatsProps {
   onExportCSV: () => void;
   onPrintReport: () => void;
   onSelectStudent: (student: Student) => void;
+  onOpenGoogleSheetModal: () => void;
 }
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({
@@ -36,6 +38,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
   onExportCSV,
   onPrintReport,
   onSelectStudent,
+  onOpenGoogleSheetModal,
 }) => {
   const total = students.length;
   const maleCount = students.filter((s) => s.jenisKelamin === 'L').length;
@@ -282,6 +285,17 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
             </div>
 
             <div className="space-y-2">
+              <button
+                onClick={onOpenGoogleSheetModal}
+                className="w-full flex items-center justify-between p-3 rounded-2xl bg-emerald-600/30 hover:bg-emerald-600/40 text-xs font-bold text-emerald-200 transition-colors border border-emerald-500/40"
+              >
+                <div className="flex items-center gap-2.5">
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                  <span>Sinkronisasi Google Sheet (Webhook)</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
+              </button>
+
               <button
                 onClick={onViewCards}
                 className="w-full flex items-center justify-between p-3 rounded-2xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition-colors border border-white/10"

@@ -13,7 +13,8 @@ import {
   RotateCcw,
   Camera,
   HeartHandshake,
-  FileText
+  FileText,
+  FileSpreadsheet
 } from 'lucide-react';
 import { Student, StudentFormData, Gender, StudentStatus, Religion } from '../types/student';
 import { LIST_JURUSAN, LIST_KELAS, LIST_EKSTRAKURIKULER, AVATAR_PRESETS } from '../data/initialStudents';
@@ -898,13 +899,19 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 
         {/* BOTTOM ACTION BAR */}
         <div className="sticky bottom-4 z-20 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200/90 shadow-xl flex items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-bold transition-colors"
-          >
-            Batal
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-sm font-bold transition-colors"
+            >
+              Batal
+            </button>
+            <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Tersimpan otomatis ke Google Sheet (Webhook)</span>
+            </div>
+          </div>
 
           <div className="flex items-center gap-3">
             <button

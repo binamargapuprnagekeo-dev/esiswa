@@ -19,7 +19,8 @@ import {
   MapPin, 
   SlidersHorizontal,
   ArrowUpDown,
-  RotateCcw
+  RotateCcw,
+  FileSpreadsheet
 } from 'lucide-react';
 import { Student, Gender, StudentStatus } from '../types/student';
 import { LIST_JURUSAN } from '../data/initialStudents';
@@ -34,6 +35,7 @@ interface StudentListProps {
   onBulkDelete: (studentIds: string[]) => void;
   onExportCSV: (selectedStudents?: Student[]) => void;
   onPrintReport: () => void;
+  onOpenGoogleSheet?: () => void;
 }
 
 export const StudentList: React.FC<StudentListProps> = ({
@@ -46,6 +48,7 @@ export const StudentList: React.FC<StudentListProps> = ({
   onBulkDelete,
   onExportCSV,
   onPrintReport,
+  onOpenGoogleSheet,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTingkat, setFilterTingkat] = useState<string>('all');
@@ -170,12 +173,23 @@ export const StudentList: React.FC<StudentListProps> = ({
 
           <button
             onClick={() => onExportCSV()}
-            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-bold transition-colors shadow-2xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold transition-colors shadow-2xs"
             title="Unduh seluruh data siswa dalam format CSV Excel"
           >
-            <Download className="w-4 h-4 text-emerald-600" />
+            <Download className="w-4 h-4 text-slate-500" />
             <span>Unduh Excel</span>
           </button>
+
+          {onOpenGoogleSheet && (
+            <button
+              onClick={onOpenGoogleSheet}
+              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-bold transition-colors shadow-2xs"
+              title="Sinkronisasi Google Sheet Webhook"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+              <span>Google Sheet</span>
+            </button>
+          )}
 
           <button
             onClick={onAddNew}
